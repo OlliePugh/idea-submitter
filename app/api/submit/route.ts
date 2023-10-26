@@ -81,3 +81,5 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ message: "Submitted" }, { status: 200 });
 }
+
+export const dyanmic = "force-dynamic";
