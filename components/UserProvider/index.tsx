@@ -28,9 +28,11 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const provider = new GoogleAuthProvider();
 
   const signInWrapper = () => {
-    signInWithPopup(auth, provider).then((result) => {
-      setUserData(result.user);
-    });
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        setUserData(result.user);
+      })
+      .catch(console.error);
   };
 
   const signOutWrapper = () => {
