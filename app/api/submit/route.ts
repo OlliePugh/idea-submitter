@@ -70,9 +70,11 @@ export async function POST(request: Request) {
   console.log(`${correlationId} | setting in database`);
 
   const ref = admin.database().ref(`idea-submitter/data`).push();
+
   ref.set({
     user,
     value: payload.idea,
+    timestamp: Date.now(),
   });
 
   console.log(`${correlationId} | successfully set value in database`);
