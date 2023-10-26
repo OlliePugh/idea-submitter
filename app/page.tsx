@@ -1,16 +1,27 @@
 "use client";
 
+import LoginButton from "@/components/LoginButton";
+import { UserContext } from "@/components/UserProvider";
+import config from "@/config";
 import { getInputErrors } from "@/utils/validate";
 import axios from "axios";
 import { Form, Formik } from "formik";
+import { useContext } from "react";
 
 export default function Home() {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="flex flex-col min-h-screen">
+      <div className="flex justify-end p-2">
+        <LoginButton />
+      </div>
       <main className="flex flex-1 flex-col items-center justify-center p-24">
         <Formik
           onSubmit={async (values, { setSubmitting }) => {
-            const result = await axios.post("/api/submit", values);
+            const result = await axios.post("/api/submit", values, {
+              headers: { Authorization: await user?.getIdToken() },
+            });
             setSubmitting(false);
           }}
           validate={(values) => {
@@ -52,10 +63,22 @@ export default function Home() {
               <p className={`text-red-500`}>
                 {errors.idea && touched.idea && errors.idea}
               </p>
+              {config.features.forcedAuth && user == null && (
+                <div className="p-4 rounded border-slate-600 border-solid border-2 bg-slate-200 drop-shadow-xl">
+                  <p className={`text-red-500 text-center`}>
+                    Due to high volume of spam login is required to submit an
+                    idea
+                  </p>
+                </div>
+              )}
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="bg-slate-400 rounded-sm p-2 text-white font-semibold transition-colors hover:bg-slate-500 disabled:bg-slate-400"
+                disabled={
+                  isSubmitting &&
+                  config.features.forcedAuth &&
+                  user == undefined
+                }
+                className="bg-slate-400 drop-shadow-2xl rounded-sm p-2 text-white font-semibold transition-colors hover:bg-slate-500 disabled:bg-slate-400 disabled:text-slate-500"
               >
                 {isSubmitting ? "Printing..." : "Submit"}
               </button>
