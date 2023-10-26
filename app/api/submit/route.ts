@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
   const ref = admin.database().ref(`idea-submitter/data`).push();
 
-  ref.set({
+  await ref.set({
     user,
     value: payload.idea,
     timestamp: Date.now(),
