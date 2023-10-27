@@ -18,10 +18,11 @@ export default function Home() {
       </div>
       <main className="flex flex-1 flex-col items-center justify-center p-24">
         <Formik
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
             const result = await axios.post("/api/submit", values, {
               headers: { Authorization: await user?.getIdToken() },
             });
+            resetForm();
             setSubmitting(false);
           }}
           validate={(values) => {
