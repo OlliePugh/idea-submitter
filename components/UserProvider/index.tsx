@@ -27,12 +27,13 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userData, setUserData] = useState<User | undefined>();
   const provider = new GoogleAuthProvider();
 
-  const signInWrapper = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        setUserData(result.user);
-      })
-      .catch(console.error);
+  const signInWrapper = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      setUserData(result.user);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const signOutWrapper = () => {
